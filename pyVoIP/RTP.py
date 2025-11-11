@@ -1,7 +1,6 @@
 from enum import Enum
 from threading import Timer
 from typing import Callable, Dict, Optional, Union
-import audioop
 import io
 import pyVoIP
 import random
@@ -474,9 +473,7 @@ class RTPClient:
         return self.parse_pcmu(packet)
 
     def parse_pcmu(self, packet: RTPMessage) -> None:
-        data = audioop.ulaw2lin(packet.payload, 1)
-        data = audioop.bias(data, 1, 128)
-        self.pmin.write(packet.timestamp, data)
+        self.pmin.write(packet.timestamp, packet.payload)
 
     def encodePCMU(self, packet: bytes) -> bytes:
         warnings.warn(
@@ -488,8 +485,6 @@ class RTPClient:
         return self.encode_pcmu(packet)
 
     def encode_pcmu(self, packet: bytes) -> bytes:
-        packet = audioop.bias(packet, 1, -128)
-        packet = audioop.lin2ulaw(packet, 1)
         return packet
 
     def parsePCMA(self, packet: RTPMessage) -> None:
@@ -502,9 +497,7 @@ class RTPClient:
         return self.parse_pcma(packet)
 
     def parse_pcma(self, packet: RTPMessage) -> None:
-        data = audioop.alaw2lin(packet.payload, 1)
-        data = audioop.bias(data, 1, 128)
-        self.pmin.write(packet.timestamp, data)
+        self.pmin.write(packet.timestamp, packet.payload)
 
     def encodePCMA(self, packet: bytes) -> bytes:
         warnings.warn(
@@ -516,8 +509,6 @@ class RTPClient:
         return self.encode_pcma(packet)
 
     def encode_pcma(self, packet: bytes) -> bytes:
-        packet = audioop.bias(packet, 1, -128)
-        packet = audioop.lin2alaw(packet, 1)
         return packet
 
     def parseTelephoneEvent(self, packet: RTPMessage) -> None:
