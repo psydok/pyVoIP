@@ -473,7 +473,7 @@ class RTPClient:
         return self.parse_pcmu(packet)
 
     def parse_pcmu(self, packet: RTPMessage) -> None:
-        data = audioop.ulaw2lin(packet.payload, 2)
+        data = audioop.ulaw2lin(packet.payload, 1)
         self.pmin.write(packet.timestamp, packet.payload)
 
     def encodePCMU(self, packet: bytes) -> bytes:
@@ -486,7 +486,7 @@ class RTPClient:
         return self.encode_pcmu(packet)
 
     def encode_pcmu(self, packet: bytes) -> bytes:
-        data = audioop.lin2ulaw(packet, 2)
+        data = audioop.lin2ulaw(packet, 1)
         return packet
 
     def parsePCMA(self, packet: RTPMessage) -> None:
@@ -499,7 +499,7 @@ class RTPClient:
         return self.parse_pcma(packet)
 
     def parse_pcma(self, packet: RTPMessage) -> None:
-        data = audioop.alaw2lin(packet.payload, 2)
+        data = audioop.alaw2lin(packet.payload, 1)
         # data = audioop.bias(data, 1, 128)
         self.pmin.write(packet.timestamp, data)
 
@@ -514,7 +514,7 @@ class RTPClient:
 
     def encode_pcma(self, packet: bytes) -> bytes:
         # packet = audioop.bias(packet, 1, -128)
-        packet = audioop.lin2alaw(packet, 2)
+        packet = audioop.lin2alaw(packet, 1)
         return packet
 
     def parseTelephoneEvent(self, packet: RTPMessage) -> None:
