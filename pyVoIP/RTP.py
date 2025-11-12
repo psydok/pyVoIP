@@ -173,7 +173,7 @@ class RTPPacketManager:
         with self.bufferLock:
             packet = self.buffer.read(length)
             if len(packet) < length:
-                packet = packet + (b"\x00" * (length - len(packet)))
+                packet = packet + (b"\x80" * (length - len(packet)))
         return packet
 
     def rebuild(self, reset: bool, offset: int = 0, data: bytes = b"") -> None:
@@ -358,7 +358,7 @@ class RTPClient:
         if not blocking:
             return self.pmin.read(length)
         packet = self.pmin.read(length)
-        while packet == (b"\x00" * length) and self.NSD:
+        while packet == (b"\x80" * length) and self.NSD:
             time.sleep(0.01)
             packet = self.pmin.read(length)
         return packet
@@ -384,7 +384,7 @@ class RTPClient:
             last_sent = time.monotonic_ns()
             payload = self.pmout.read()
             payload = self.encode_packet(payload)
-            packet = b"\x00"  # RFC 1889 V2 No Padding Extension or CC.
+            packet = b"\x80"  # RFC 1889 V2 No Padding Extension or CC.
             packet += chr(int(self.preference)).encode("utf8")
             try:
                 packet += self.outSequence.to_bytes(2, byteorder="big")
