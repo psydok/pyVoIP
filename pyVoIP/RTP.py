@@ -1,6 +1,7 @@
 from enum import Enum
 from threading import Timer
 from typing import Callable, Dict, Optional, Union
+import audioop
 import io
 import pyVoIP
 import random
