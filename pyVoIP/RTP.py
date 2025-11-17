@@ -499,10 +499,6 @@ class RTPClient:
         )
         return self.parse_pcma(packet)
 
-    def parse_pcma(self, packet: RTPMessage) -> None:
-        data = audioop.alaw2lin(packet.payload, 2)
-        self.pmin.write(packet.timestamp, data)
-
     def encodePCMA(self, packet: bytes) -> bytes:
         warnings.warn(
             "encodePCMA is deprecated due to PEP8 compliance. "
@@ -512,8 +508,14 @@ class RTPClient:
         )
         return self.encode_pcma(packet)
 
+    def parse_pcma(self, packet: RTPMessage) -> None:
+        data = audioop.alaw2lin(packet.payload, 1)
+        data = audioop.bias(data, 1, 128)
+        self.pmin.write(packet.timestamp, data)
+
     def encode_pcma(self, packet: bytes) -> bytes:
-        packet = audioop.lin2alaw(packet, 2)
+        packet = audioop.bias(packet, 1, -128)
+        packet = audioop.lin2alaw(packet, 1)
         return packet
 
     def parseTelephoneEvent(self, packet: RTPMessage) -> None:
