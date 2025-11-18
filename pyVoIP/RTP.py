@@ -370,7 +370,7 @@ class RTPClient:
     def recv(self) -> None:
         while self.NSD:
             try:
-                packet = self.sin.recv(8192)
+                packet = self.sin.recv(323)
                 self.parse_packet(packet)
             except BlockingIOError:
                 time.sleep(0.02)
