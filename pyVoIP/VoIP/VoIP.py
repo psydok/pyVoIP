@@ -461,10 +461,10 @@ class VoIPCall:
         for x in self.RTPClients:
             data.append(x.read(length))
         # Mix audio from different sources before returning
-        nd = audioop.add(data.pop(0), data.pop(0), 1)
-        for d in data:
-            nd = audioop.add(nd, d, 1)
-        return nd
+        # nd = audioop.add(data.pop(0), data.pop(0), 1)
+        # for d in data:
+            # nd = audioop.add(nd, d, 1)
+        return data.pop(0) + data.pop(1)
 
 
 class VoIPPhone:
