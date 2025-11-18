@@ -437,7 +437,8 @@ class RTPClient:
         if msg.payload_type == PayloadType.PCMU:
             self.parse_pcmu(msg)
         elif msg.payload_type == PayloadType.PCMA:
-            self.parse_pcma(msg)
+            # self.parse_pcma(msg)
+            self.parse_pcmu(msg)
         elif msg.payload_type == PayloadType.EVENT:
             self.parse_telephone_event(msg)
         else:
