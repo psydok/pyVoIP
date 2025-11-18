@@ -459,7 +459,8 @@ class RTPClient:
         if self.preference == PayloadType.PCMU:
             return self.encode_pcmu(payload)
         elif self.preference == PayloadType.PCMA:
-            return self.encode_pcma(payload)
+            # return self.encode_pcma(payload)
+            return self.encode_pcmu(payload)
         else:
             raise RTPParseError(
                 "Unsupported codec (encode): " + str(self.preference)
